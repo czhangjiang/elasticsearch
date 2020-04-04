@@ -1,0 +1,30 @@
+#集群名称 zhangweitao
+cluster.name: es-docker-cluster
+# 节点名称
+node.name: es02
+# 是否为主节点
+node.master: false
+# 该节点是否存储数据
+node.data: true
+# 对外开放的http端口
+http.port: 9200
+# 回环地址
+network.host: 0.0.0.0
+
+#network.publish_host: master-ip
+# 有资格成为主节点的资格列表
+discovery.zen.ping.unicast.hosts: ["es01"]
+
+# 是否运行跨域REST请求
+http.cors.enabled: true
+# 允许跨域请求来自何处
+http.cors.allow-origin: "*"
+
+# 有成为主节点资格的最小节点数
+discovery.zen.minimum_master_nodes: 1
+
+xpack.security.enabled: false
+
+#discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+
+cluster.initial_master_nodes: es01,es02

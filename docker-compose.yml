@@ -1,0 +1,62 @@
+version: '2.2'
+services:
+  es01:
+    image: elasticsearch:7.5.1
+    container_name: es01
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+      - ./es01.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+  es02:
+    image: elasticsearch:7.5.1
+    container_name: es02
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+      - ./es02.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - elastic
+  kibana:
+    image: kibana:7.5.1
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      I18N_LOCALE: zh-CN #汉化
+    networks:
+      - elastic
+    links:
+      - es01:elasticsearch
+  elasticsearch-head:
+    image: mobz/elasticsearch-head:5
+    container_name: elasticsearch-head
+    ports:
+        - "9100:9100"
+    volumes:
+        - /Users/zhangweitao/work/docker/es/elasticsearch-head/Gruntfile.js:/usr/src/app/Gruntfile.js
+        - /Users/zhangweitao/work/docker/es/elasticsearch-head/_site/app.js:/usr/src/app/_site/app.js
+    links:
+        - es01:elasticsearch
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+networks:
+  elastic:
+    driver: bridge
